@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Region Of Rebellion — Онлайн Игра</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body, html {
+      height: 100%;
+      font-family: 'Arial', sans-serif;
+      color: #fff;
+    }
+    .background {
+      background-image: url('https://raw.githubusercontent.com/DarkHunter2025/Region-Of-Rebellion-Assets/main/MainMenu.png');
+      background-size: cover;
+      background-position: center;
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .content {
+      background: rgba(0, 0, 0, 0.65);
+      padding: 40px;
+      max-width: 600px;
+      text-align: center;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+    h1 {
+      font-size: 48px;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 5px #000;
+    }
+    p {
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+    .btn {
+      background-color: #e63946;
+      color: #fff;
+      padding: 14px 28px;
+      font-size: 18px;
+      text-decoration: none;
+      border-radius: 10px;
+      transition: background 0.3s ease;
+    }
+    .btn:hover {
+      background-color: #b42b38;
+    }
+    @media (max-width: 600px) {
+      .content { padding: 20px; }
+      h1 { font-size: 36px; }
+      p { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="background">
+    <div class="content">
+      <h1>Region Of Rebellion</h1>
+      <p>
+        Добро пожаловать в <strong>Region Of Rebellion</strong> — многопользовательскую браузерную онлайн игру! <br><br>
+        Прокачивай персонажа, выполняй квесты, участвуй в осадах, сражайся в PvP и PvE боях, открывай новые территории и стань героем своего мира!
+      </p>
+      <a href="#" class="btn">Войти в игру</a>
+    </div>
+  </div>
+</body>
+</html>

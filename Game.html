@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Rebellion Of Region</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #e0d6c3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #1a1a1a;
+            overflow: hidden;
+        }
+        #mainWindow {
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: url('https://raw.githubusercontent.com/DarkHunter2025/Region-Of-Rebellion-Assets/main/MainMenu.png') no-repeat center center;
+            background-size: cover;
+        }
+        #gameTitle {
+            font-size: 42px;
+            margin-bottom: 50px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            letter-spacing: 2px;
+        }
+        .btn {
+            display: block;
+            width: 300px;
+            margin: 20px auto;
+            padding: 15px;
+            background: linear-gradient(to bottom, #8B4513, #5d2d0f);
+            color: #e0d6c3;
+            border: 2px solid #5d2d0f;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .btn:hover {
+            background: linear-gradient(to bottom, #9c5a2b, #6d3711);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);
+        }
+        .btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        #registerWindow,
+        #loginWindow,
+        #recoverWindow,
+        #characterCreationWindow,
+        #classSelectionWindow {
+            background: url('https://raw.githubusercontent.com/DarkHunter2025/Region-Of-Rebellion-Assets/main/MainMenu.png') no-repeat center center;
+            background-size: cover;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #e0d6c3;
+        }
+        #recoverWindow {
+            display: none;
+        }
+        #villageWindow {
+            background: url('https://raw.githubusercontent.com/DarkHunter2025/Region-Of-Rebellion-Assets/main/derevnea.png') no-repeat center center;
+            background-size: cover;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #knightWindow,
+        #mageWindow,
+        #assassinWindow,
+        #summonerWindow,
+        #rangerWindow,
+        #classDescriptionWindow {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            padding: 30px;
+            box-sizing: border-box;
+            text-align: center;
+            background: linear-gradient(to right, #1a1a1a, #2d2d2d);
+            color: #e0d6c3;
+        }
+        .knight-container {
+            display: flex;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .gender-selection {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 20px;
+        }
+        .gender-option {
+            position: relative;
+            border: 3px solid transparent;
+            border-radius: 10px;
+            padding: 5px;
+            width: 300px;
+            text-align: center;
+        }
+        .gender-option img {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+            cursor: pointer;
+        }
+        .gender-option.selected img {
+            box-shadow: 0 0 20px 5px rgba(193,157,96,0.8);
+            transition: box-shadow 0.3s;
+        }
+        .gender-option .gender-text {
+            position: absolute;
+            bottom: 170px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ffffff;
+            font-size: 18px;
+            pointer-events: none;
+        }
+        .gender-selection .gender-option:nth-child(1) .gender-text {
+            bottom: 168px;
+        }
+        .gender-option input {
+            margin-top: 80px;
+            width: 100%;
+            box-sizing: border-box;
+            background-color: rgba(0,0,0,0.3);
+            border: 2px solid #5d2d0f;
+            border-radius: 5px;
+            padding: 12px 15px;
+            color: #e0d6c3;
+            font-size: 16px;
+            outline: none;
+        }
+        .gender-option button {
+            margin-top: 80px;
+            width: 100%;
+            padding: 12px 15px;
+        }
+        .knight-description {
+            flex: 1;
+            margin-left: 40px;
+            text-align: left;
+            font-size: 18px;
+            line-height: 1.2;
+        }
+        .error-message {
+            color: #e74c3c;
+            margin-top: 10px;
+            font-size: 14px;
+            text-align: center;
+            height: 20px;
+        }
+        .backBtn {
+            position: absolute;
+            right: 40px;
+            bottom: 40px;
+            padding: 12px 30px;
+            background: linear-gradient(to bottom, #8B4513, #5d2d0f);
+            color: #e0d6c3;
+            border: 2px solid #5d2d0f;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+        .backBtn:hover {
+            background: linear-gradient(to bottom, #9c5a2b, #6d3711);
+            transform: translateY(-2px);
+        }
+        .closeBtn {
+            position: absolute;
+            top: 20px; right: 20px;
+            background: none; border: none;
+            color: #e0d6c3; font-size: 24px;
+            cursor: pointer;
+        }
+        input {
+            display: block;
+            width: 80%;
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 12px 15px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 2px solid #5d2d0f;
+            border-radius: 6px;
+            color: #e0d6c3;
+            font-size: 18px;
+            outline: none;
+        }
+        input:focus {
+            border-color: #c19d60;
+        }
+        input::placeholder {
+            color: #a99e8b;
+            opacity: 1;
+        }
+        .slot-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 35px;
+            width: 100%;
+            max-width: 900px;
+            margin: 20px 0;
+        }
+        .slot {
+            border: 3px solid #5d2d0f;
+            border-radius: 12px;
+            background-color: rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px;
+            box-sizing: border-box;
+        }
+        .slot:hover {
+            border-color: #c19d60;
+            transform: translateY(-5px);
+        }
+        .slot p {
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: #e0d6c3;
+            text-align: center;
+        }
+        .character-class {
+            font-size: 18px;
+            color: #c19d60;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+        .slot-btn {
+            margin-top: 15px;
+            padding: 10px 20px;
+            font-size: 16px;
+            width: 160px;
+            background: linear-gradient(to bottom, #8B4513, #5d2d0f);
+            color: #e0d6c3;
+            border: 2px solid #5d2d0f;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+        .slot-btn:hover {
+            background: linear-gradient(to bottom, #9c5a2b, #6d3711);
+            transform: translateY(-2px);
+        }
+        .window-title {
+            font-size: 40px;
+            margin-bottom: 40px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div id="mainWindow">
+        <h1 id="gameTitle">Rebellion Of Region</h1>
+        <button class="btn" onclick="showWindow('register')">Регистрация</button>
+        <button class="btn" onclick="showWindow('login')">Вход</button>
+        <button class="btn" onclick="showWindow('recover')">Восстановить пароль</button>
+        <button class="btn" onclick="openWebsite()">Сайт</button>
+    </div>
+
+    <div id="registerWindow" style="display:none">
+        <h2 class="window-title">Регистрация</h2>
+        <div class="content-area">
+            <input type="email" id="regEmail" placeholder="Почта">
+            <input type="password" id="regPassword" placeholder="Пароль">
+            <p id="regError" class="error"></p>
+            <button class="btn" onclick="register()">Зарегистрироваться</button>
+        </div>
+        <button class="backBtn" onclick="handleBackButton()">Назад</button>
+    </div>
+
+    <div id="loginWindow" style="display:none">
+        <h2 class="window-title">Вход</h2>
+        <div class="content-area">
+            <input type="email" id="loginEmail" placeholder="Почта">
+            <input type="password" id="loginPassword" placeholder="Пароль">
+            <p id="loginError" class="error"></p>
+            <button class="btn" onclick="login()">Войти</button>
+        </div>
+        <button class="backBtn" onclick="handleBackButton()">Назад</button>
+    </div>
+
+    <div id="recoverWindow" style="display:none">
+        <h2 class="window-title">Восстановить пароль</h2>
+        <p>Форма восстановления будет здесь...</p>
+        <button class="backBtn" onclick="handleBackButton()">Назад</button>
+    </div>
+
+    <div id="characterCreationWindow" style="display:none">
+        <h2 class="window-title">Создание Персонажа</h2>
+        <div class="content-area">
+            <div class="slot-container">
+                <div class="slot" id="slot1">
+                    <p>Персонаж 1</p>
+                    <div class="character-class">Класс не выбран</div>
+                    <button class="btn slot-btn" onclick="startCharacterCreation(0)">Создать</button>
+                </div>
+                <div class="slot" id="slot2">
+                    <p>Персонаж 2</p>
+                    <div class="character-class">Класс не выбран</div>
+                    <button class="btn slot-btn" onclick="startCharacterCreation(1)">Создать</button>
+                </div>
+                <div class="slot" id="slot3">
+                    <p>Персонаж 3</p>
+                    <div class="character-class">Класс не выбран</div>
+                    <button class="btn slot-btn" onclick="startCharacterCreation(2)">Создать</button>
+                </div>
+            </div>
+        </div>
+        <button class="backBtn" onclick="handleBackButton()">Выйти</button>
+    </div>
+
+    <div id="classSelectionWindow" style="display:none">
+        <h2 class="window-title">Выбор Класса</h2>
+        <div class="content-area">
+            <div class="slot-container">
+                <div class="slot">
+                    <p>Рыцарь</p>
+                    <button class="btn slot-btn" onclick="showWindow('knight')">Выбрать</button>
+                </div>
+                <div class="slot">
+                    <p>Маг</p>
+                    <button class="btn slot-btn" onclick="showWindow('mage')">Выбрать</button>
+                </div>
+                <div class="slot">
+                    <p>Ассасин</p>
+                    <button class="btn slot-btn" onclick="showWindow('assassin')">Выбрать</button>
+                </div>
+                <div class="slot">
+                    <p>Призыватель</p>
+                    <button class="btn slot-btn" onclick="showWindow('summoner')">Выбрать</button>
+                </div>
+                <div class="slot">
+                    <p>Рейнджер</p>
+                    <button class="btn slot-btn" onclick="showWindow('ranger')">Выбрать</button>
+                </div>
+                <div class="slot">
+                    <p>Запасной слот</p>
+                    <button class="btn slot-btn" disabled>Недоступно</button>
+                </div>
+            </div>
+        </div>
+        <button class="backBtn" onclick="showWindow('characterCreation')">Выйти</button>
+    </div>
+
+    <div id="knightWindow" style="display:none">
+        <h2 class="window-title">Рыцарь</h2>
+        <div class="knight-container">
+            <div class="gender-selection">
+                <div class="gender-option" data-gender="male">
+                    <img src="https://raw.githubusercontent.com/DarkHunter2025/Region-Of-Rebellion-Assets/main/%D0%A0%D1%8B%D1%86%D0%B0%D1%80%D1%8C%20%D0%9C%20%D0%A1%20%D0%A0%D0%B0%D0%BC%D0%BA%D0%BE%D0%B9.png" alt="Рыцарь (мужчина)" onclick="selectGender('male')">
+                    <div class="gender-text">Мужской</div>
+                    <input type="text" id="knightName" placeholder="Введите имя персонажа">
+                </div>
+                <div class="gender-option" data-gender="female">
+                    <img src="https://raw.githubusercontent.com/DarkHunter2025/Region-Of-Rebellion-Assets/main/%D0%A0%D1%8B%D1%86%D0%B0%D1%80%D1%8C_%D0%96_%D1%81_%D1%80%D0%B0%D0%BC%D0%BA%D0%BE%D0%B9.png" alt="Рыцарь (женщина)" onclick="selectGender('female')">
+                    <div class="gender-text">Женский</div>
+                    <button class="btn" onclick="createKnightCharacter()">Создать</button>
+                </div>
+            </div>
+            <div class="knight-description">
+                <p>Рыцарь - обладает высокой живучестью за счёт большого количества здоровья. Основная характеристика — сила. Рыцарь — это танк со щитом, который способен выдерживать огромный урон. Рыцарь также умеет обращаться с двуручным оружием, что делает его более слабым в защите, но при этом он наносит мощные удары, сметая всё на своём пути. Рыцарь за счёт силы наращивает свой собственный урон, что даёт возможность сокрушать врагов.</p>
+            </div>
+        </div>
+        <p id="knightError" class="error-message"></p>
+        <button class="backBtn" onclick="showWindow('classSelection')">Назад</button>
+    </div>
+
+    <div id="mageWindow" style="display:none">
+        <h2 class="window-title">Маг</h2>
+        <div class="knight-container">
+            <div class="gender-selection">
+                <div class="gender-option" data-gender="male">
+                    <img src="https://raw.githubusercontent.com/DarkHunter2025/Region-Of-Rebellion-Assets/main/Маг%20М%20С%20Рамкой.png" alt="Маг (мужчина)" onclick="selectGender('male')">
+                    <div class="gender-text">Мужской</div>
+                    <input type="text" id="mageName" placeholder="Введите имя персонажа">
+                </div>
+                <div class="gender-option" data-gender="female">
+                    <img src="https://raw.githubusercontent.com/DarkHunter2025/Region-Of-Rebellion-Assets/main/Маг%20Ж%20С%20Рамкой.png" alt="Маг (женщина)" onclick="selectGender('female')">
+                    <div class="gender-text">Женский</div>
+                    <button class="btn" onclick="createMageCharacter()">Создать</button>
+                </div>
+            </div>
+            <div class="knight-description">
+                <p>Маг - обладает магическими способностями как положительными для поддержки союзников, так и негативными для атаки врагов. За счёт интеллекта маг умело осваивает новые умения, которые помогают ему в бою. Маг умеет обращаться с двуручным посохом. Интеллект является основной характеристикой, которая способствует увеличению уровня магических атак.</p>
+            </div>
+        </div>
+        <p id="mageError" class="error-message"></p>
+        <button class="backBtn" onclick="showWindow('classSelection')">Назад</button>
+    </div>
+
+    <div id="assassinWindow" style="display:none">
+        <h2 class="window-title">Ассасин</h2>
+        <div class="knight-container">
+            <div class="gender-selection">
+                <div class="gender-option" data-gender="male">
+                    <img src="https://raw.githubusercontent.com/DarkHunter2025/Region-Of-Rebellion-Assets/main/Ассасин%20М%20С%20Рамкой.png" alt="Ассасин (мужчина)" onclick="selectGender('male')">
+                    <div class="gender-text">Мужской</div>
+                    <input type="text" id="assassinName" placeholder="Введите имя персонажа">
+                </div>
+                <div class="gender-option" data-gender="female">
+                    <img src="https://raw.githubusercontent.com/DarkHunter2025/Region-Of-Rebellion-Assets/main/Ассасин%20Ж%20С%20Рамкой.png" alt="Ассасин (женщина)" onclick="selectGender('female')">
+                    <div class="gender-text">Женский</div>
+                    <button class="btn" onclick="createAssassinCharacter()">Создать</button>
+                </div>
+            </div>
+            <div class="knight-description">
+                <p>Ассасин - уникальный класс, способный наносить сокрушительные удары за счёт своей силы, но при этом слабый в защите. Отлично владеет кинжалами. За счёт силы ассасин увеличивает свой урон по врагам. Ассасин также способен скрываться от врагов и атаковать внезапно, так что враг его и не заметит. Сила является основной характеристикой.</p>
+            </div>
+        </div>
+        <p id="assassinError" class="error-message"></p>
+        <button class="backBtn" onclick="showWindow('classSelection')">Назад</button>
+    </div>
+
+    <div id="summonerWindow" style="display:none">
+        <h2 class="window-title">Призыватель</h2>
+        <div class="knight-container">
+            <div class="gender-selection">
+                <div class="gender-option" data-gender="male">
+                    <img src="https://raw.githubusercontent.com/DarkHunter2025/Region-Of-Rebellion-Assets/main/Призыватель%20М%20С%20Рамкой.png" alt="Призыватель (мужчина)" onclick="selectGender('male')">
+                    <div class="gender-text">Мужской</div>
+                    <input type="text" id="summonerName" placeholder="Введите имя персонажа">
+                </div>
+                <div class="gender-option" data-gender="female">
+                    <img src="https://raw.githubusercontent.com/DarkHunter2025/Region-Of-Rebellion-Assets/main/Призыватель%20Ж%20С%20Рамкой.png" alt="Призыватель (женщина)" onclick="selectGender('female')">
+                    <div class="gender-text">Женский</div>
+                    <button class="btn" onclick="createSummonerCharacter()">Создать</button>
+                </div>
+            </div>
+            <div class="knight-description">
+                <p>Призыватель - ловко обращается с магией духов, призывает тотемы, защищающие себя и союзников, за счёт интеллекта наращивает способность атаковать магическими стрелами. Основная характеристика - интеллект, за счёт него призыватель становится умелым заклинателем.</p>
+            </div>
+        </div>
+        <p id="summonerError" class="error-message"></p>
+        <button class="backBtn" onclick="showWindow('classSelection')">Назад</button>
+    </div>
+
+    <div id="rangerWindow" style="display:none">
+        <h2 class="window-title">Рейнджер</h2>
+        <div class="knight-container">
+            <div class="gender-selection">
+                <div class="gender-option" data-gender="male">
+                    <img src="https://raw.githubusercontent.com/DarkHunter2025/Region-Of-Rebellion-Assets/main/Рейнджер%20М%20С%20Рамкой.png" alt="Рейнджер (мужчина)" onclick="selectGender('male')">
+                    <div class="gender-text">Мужской</div>
+                    <input type="text" id="rangerName" placeholder="Введите имя персонажа">
+                </div>
+                <div class="gender-option" data-gender="female">
+                    <img src="https://raw.githubusercontent.com/DarkHunter2025/Region-Of-Rebellion-Assets/main/Рейнджер%20Ж%20С%20Рамкой.png" alt="Рейнджер (женщина)" onclick="selectGender('female')">
+                    <div class="gender-text">Женский</div>
+                    <button class="btn" onclick="createRangerCharacter()">Создать</button>
+                </div>
+            </div>
+            <div class="knight-description">
+                <p>Рейнджер - ловкий воин, который умело обращается с оружием дальнего боя. За счёт ловкости рейнджер наращивает свой урон и сокрушает врагов на своём пути. Основная характеристика - ловкость. Рейнджер умеет отравлять свои стрелы, которые поражают врагов гораздо эффективнее.</p>
+            </div>
+        </div>
+        <p id="rangerError" class="error-message"></p>
+        <button class="backBtn" onclick="showWindow('classSelection')">Назад</button>
+    </div>
+
+    <script>
+        let actionLogs = JSON.parse(localStorage.getItem('actionLogs')) || [];
+        function logAction(action) {
+            const timestamp = new Date().toISOString();
+            actionLogs.push({ timestamp, action });
+            localStorage.setItem('actionLogs', JSON.stringify(actionLogs));
+        }
+
+        let users = [];
+        let currentSlot = -1;
+        let characterNames = ["Персонаж 1", "Персонаж 2", "Персонаж 3"];
+        let characterClasses = ["Класс не выбран", "Класс не выбран", "Класс не выбран"];
+        let selectedGender = null;
+
+        function showWindow(windowName) {
+            logAction(`showWindow: ${windowName}`);
+            document.querySelectorAll('div[id$="Window"]').forEach(w => w.style.display = 'none');
+            if (windowName === 'main') {
+                document.getElementById('mainWindow').style.display = 'flex';
+            } else {
+                const el = document.getElementById(windowName + 'Window');
+                if (el) el.style.display = 'flex';
+            }
+            if (["knight","mage","assassin","summoner","ranger"].includes(windowName)) {
+                selectedGender = null;
+                if (windowName === 'knight') document.getElementById('knightError').textContent = '';
+                else if (windowName === 'mage') document.getElementById('mageError').textContent = '';
+                else if (windowName === 'assassin') document.getElementById('assassinError').textContent = '';
+                else if (windowName === 'summoner') document.getElementById('summonerError').textContent = '';
+                else if (windowName === 'ranger') document.getElementById('rangerError').textContent = '';
+                document.querySelectorAll('.gender-option').forEach(o => o.classList.remove('selected'));
+            }
+        }
+
+        function selectGender(gender) {
+            logAction(`selectGender: ${gender}`);
+            selectedGender = gender;
+            document.querySelectorAll('.error-message').forEach(e => e.textContent = '');
+            ['knightWindow','mageWindow','assassinWindow','summonerWindow','rangerWindow'].forEach(id => {
+                const win = document.getElementById(id);
+                if (win.style.display === 'flex') {
+                    win.querySelectorAll('.gender-option').forEach(opt => opt.classList.remove('selected'));
+                    const chosen = win.querySelector(`.gender-option[data-gender="${gender}"]`);
+                    if (chosen) chosen.classList.add('selected');
+                }
+            });
+        }
+
+        function startCharacterCreation(slotIndex) {
+            logAction(`startCharacterCreation: slot ${slotIndex}`);
+            currentSlot = slotIndex;
+            showWindow('classSelection');
+        }
+
+        function createKnightCharacter() {
+            const input = document.getElementById('knightName');
+            const name = input.value.trim();
+            logAction(`createKnightCharacter: name=${name}, gender=${selectedGender}`);
+            const err = document.getElementById('knightError');
+            if (!selectedGender) { err.textContent = 'Выберите пол персонажа!'; return; }
+            if (name.length < 3) { err.textContent = 'Имя должно содержать минимум 3 символов!'; return; }
+            if (characterNames.includes(name)) { err.textContent = 'Имя уже занято!'; return; }
+            characterNames[currentSlot] = name;
+            characterClasses[currentSlot] = "Рыцарь";
+            const slot = document.getElementById(`slot${currentSlot+1}`);
+            slot.querySelector('p').textContent = name;
+            slot.querySelector('.character-class').textContent = "Рыцарь";
+            const btn = slot.querySelector('button');
+            btn.textContent = "Войти в игру";
+            btn.onclick = () => showWindow('village');
+            showWindow('characterCreation');
+            input.value = '';
+        }
+
+        function createMageCharacter() {
+            const input = document.getElementById('mageName');
+            const name = input.value.trim();
+            logAction(`createMageCharacter: name=${name}, gender=${selectedGender}`);
+            const err = document.getElementById('mageError');
+            if (!selectedGender) { err.textContent = 'Выберите пол персонажа!'; return; }
+            if (name.length < 3) { err.textContent = 'Имя должно содержать минимум 3 символов!'; return; }
+            if (characterNames.includes(name)) { err.textContent = 'Имя уже занято!'; return; }
+            characterNames[currentSlot] = name;
+            characterClasses[currentSlot] = "Маг";
+            const slot = document.getElementById(`slot${currentSlot+1}`);
+            slot.querySelector('p').textContent = name;
+            slot.querySelector('.character-class').textContent = "Маг";
+            const btn = slot.querySelector('button');
+            btn.textContent = "Войти в игру";
+            btn.onclick = () => showWindow('village');
+            showWindow('characterCreation');
+            input.value = '';
+        }
+
+        function createAssassinCharacter() {
+            const input = document.getElementById('assassinName');
+            const name = input.value.trim();
+            logAction(`createAssassinCharacter: name=${name}, gender=${selectedGender}`);
+            const err = document.getElementById('assassinError');
+            if (!selectedGender) { err.textContent = 'Выберите пол персонажа!'; return; }
+            if (name.length < 3) { err.textContent = 'Имя должно содержать минимум 3 символов!'; return; }
+            if (characterNames.includes(name)) { err.textContent = 'Имя уже занято!'; return; }
+            characterNames[currentSlot] = name;
+            characterClasses[currentSlot] = "Ассасин";
+            const slot = document.getElementById(`slot${currentSlot+1}`);
+            slot.querySelector('p').textContent = name;
+            slot.querySelector('.character-class').textContent = "Ассасин";
+            const btn = slot.querySelector('button');
+            btn.textContent = "Войти в игру";
+            btn.onclick = () => showWindow('village');
+            showWindow('characterCreation');
+            input.value = '';
+        }
+
+        function createSummonerCharacter() {
+            const input = document.getElementById('summonerName');
+            const name = input.value.trim();
+            logAction(`createSummonerCharacter: name=${name}, gender=${selectedGender}`);
+            const err = document.getElementById('summonerError');
+            if (!selectedGender) { err.textContent = 'Выберите пол персонажа!'; return; }
+            if (name.length < 3) { err.textContent = 'Имя должно содержать минимум 3 символов!'; return; }
+            if (characterNames.includes(name)) { err.textContent = 'Имя уже занято!'; return; }
+            characterNames[currentSlot] = name;
+            characterClasses[currentSlot] = "Призыватель";
+            const slot = document.getElementById(`slot${currentSlot+1}`);
+            slot.querySelector('p').textContent = name;
+            slot.querySelector('.character-class').textContent = "Призыватель";
+            const btn = slot.querySelector('button');
+            btn.textContent = "Войти в игру";
+            btn.onclick = () => showWindow('village');
+            showWindow('characterCreation');
+            input.value = '';
+        }
+
+        function createRangerCharacter() {
+            const input = document.getElementById('rangerName');
+            const name = input.value.trim();
+            logAction(`createRangerCharacter: name=${name}, gender=${selectedGender}`);
+            const err = document.getElementById('rangerError');
+            if (!selectedGender) { err.textContent = 'Выберите пол персонажа!'; return; }
+            if (name.length < 3) { err.textContent = 'Имя должно содержать минимум 3 символов!'; return; }
+            if (characterNames.includes(name)) { err.textContent = 'Имя уже занято!'; return; }
+            characterNames[currentSlot] = name;
+            characterClasses[currentSlot] = "Рейнджер";
+            const slot = document.getElementById(`slot${currentSlot+1}`);
+            slot.querySelector('p').textContent = name;
+            slot.querySelector('.character-class').textContent = "Рейнджер";
+            const btn = slot.querySelector('button');
+            btn.textContent = "Войти в игру";
+            btn.onclick = () => showWindow('village');
+            showWindow('characterCreation');
+            input.value = '';
+        }
+
+        function register() {
+            const email = document.getElementById('regEmail').value;
+            logAction(`register attempt: email=${email}`);
+            const pwd = document.getElementById('regPassword').value;
+            const err = document.getElementById('regError');
+            if (!email || !pwd) { err.textContent = 'Заполните все поля!'; return; }
+            if (users.some(u => u.email === email)) { err.textContent = 'Пользователь уже существует!'; return; }
+            users.push({email, password: pwd});
+            alert('Регистрация успешна!');
+            showWindow('login');
+        }
+
+        function login() {
+            const email = document.getElementById('loginEmail').value;
+            logAction(`login attempt: email=${email}`);
+            const pwd = document.getElementById('loginPassword').value;
+            const err = document.getElementById('loginError');
+            if (!email || !pwd) { err.textContent = 'Заполните все поля!'; return; }
+            const u = users.find(u => u.email === email && u.password === pwd);
+            if (!u) { err.textContent = 'Неверная почта или пароль!'; return; }
+            showWindow('characterCreation');
+        }
+
+        function handleBackButton() {
+            logAction('handleBackButton');
+            showWindow('main');
+        }
+        function openWebsite() {
+            logAction('openWebsite');
+            alert("Официальный сайт будет добавлен позже!");
+        }
+
+        // Старт с главного окна
+        showWindow('main');
+    </script>
+</body>
+</html>

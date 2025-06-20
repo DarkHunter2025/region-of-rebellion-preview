@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -20,6 +21,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      position: relative;
     }
     .content {
       background: rgba(0, 0, 0, 0.65);
@@ -27,7 +29,6 @@
       max-width: 600px;
       text-align: center;
       border-radius: 20px;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
     }
     h1 {
       font-size: 48px;
@@ -51,23 +52,192 @@
     .btn:hover {
       background-color: #b42b38;
     }
-    @media (max-width: 600px) {
-      .content { padding: 20px; }
-      h1 { font-size: 36px; }
-      p { font-size: 16px; }
+    .side-button {
+      position: absolute;
+      left: 30px;
+      width: 200px;
+      padding: 12px 0;
+      font-size: 18px;
+      background-color: #e67e22;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 1001;
+      transition: background 0.3s ease;
+    }
+    .side-button:hover {
+      background-color: #cc6c1a;
+    }
+    .class-button { top: 30px; }
+    .home-button { top: 80px; }
+
+    .class-gallery {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+      padding: 40px 20px;
+      background-color: rgba(0, 0, 0, 0.95);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      z-index: 10;
+    }
+    .gallery-row {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      flex-wrap: nowrap;
+    }
+    .gallery-row img,
+    .empty-slot {
+      width: 240px;
+      height: auto;
+      max-height: 420px;
+      object-fit: contain;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .gallery-row img:hover {
+      transform: scale(1.05);
+    }
+    .empty-slot {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #aaa;
+      font-size: 18px;
+      font-style: italic;
+    }
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 28px;
+      background: none;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.95);
+      z-index: 20;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
+    .modal-content {
+      display: flex;
+      flex-direction: row;
+      max-width: 960px;
+      width: 100%;
+      gap: 40px;
+      position: relative;
+    }
+    .modal-content img {
+      width: 240px;
+      height: auto;
+      object-fit: contain;
+      border-radius: 10px;
+    }
+    .modal-text {
+      font-size: 16px;
+      line-height: 1.6;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal .close-btn {
+      position: absolute;
+      top: 0;
+      right: -40px;
+      font-size: 32px;
+      color: white;
+      background: none;
+      border: none;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <div class="background">
+    <button class="side-button class-button" onclick="toggleGallery()">Классы</button>
+    <button class="side-button home-button" onclick="goHome()">Главная страница</button>
     <div class="content">
       <h1>Region Of Rebellion</h1>
       <p>
         Добро пожаловать в <strong>Region Of Rebellion</strong> — многопользовательскую браузерную онлайн игру! <br><br>
         Прокачивай персонажа, выполняй квесты, участвуй в осадах, сражайся в PvP и PvE боях, открывай новые территории и стань героем своего мира!
       </p>
-      <a href="Game.html" class="btn">Войти в игру</a>
+      <a href="#" class="btn">Войти в игру</a>
+    </div>
+
+    <div id="gallery" class="class-gallery">
+      <button class="close-btn" onclick="toggleGallery()">×</button>
+      <div class="gallery-row">
+        <img src="Рыцарь М С Рамкой.png" alt="Рыцарь" onclick="openModal()" />
+        <img src="Маг М С Рамкой.png" alt="Маг" />
+        <img src="Ассасин Ж С Рамкой.png" alt="Ассасин" />
+      </div>
+      <div class="gallery-row">
+        <img src="Призыватель Ж С Рамкой.png" alt="Призыватель" />
+        <img src="Рейнджер Ж С Рамкой.png" alt="Рейнджер" />
+        <div class="empty-slot">Скоро...</div>
+      </div>
+    </div>
+
+    <div id="modal" class="modal" onclick="closeModal(event)">
+      <div class="modal-content">
+        <img src="Рыцарь М С Рамкой.png" alt="Рыцарь" />
+        <div class="modal-text">
+          <h2>Рыцарь</h2>
+          <p>
+            Рыцарь — персонаж ближнего боя с двумя основными вариантами развития: урон или защита.
+            В личном дереве умений есть ветки атаки и защиты. Оружие также делится на атакующее (алебарда без щита)
+            и оборонительное (тяжелые двуручные мечи со щитом). У него самый большой запас здоровья. Все это делает рыцаря гибким классом.
+            <br><br>
+            С максимальным уроном комфортно охотиться на монстров. Максимальная защита необходима на осадах и Битвах гильдий,
+            другие классы не могут выдержать столько же урона, сколько выдерживает рыцарь.
+            Скомбинировав оружие, дерево умений и питомца – можно наносить много урона при хорошей стойкости.
+            Активные умения рыцаря направлены только на усиление его самого.
+            <br><br>
+            Сложность игры за рыцаря – выбор нужной экипировки и правильное изучение дерева умений.
+            Зато в бою вам будет легко – следите за личными бафами, запасом здоровья и почаще нажимайте на умение критического удара.
+          </p>
+        </div>
+        <button class="close-btn" onclick="closeModal(event)">×</button>
+      </div>
     </div>
   </div>
+
+  <script>
+    function toggleGallery() {
+      const gallery = document.getElementById('gallery');
+      gallery.style.display = gallery.style.display === 'flex' ? 'none' : 'flex';
+    }
+    function openModal() {
+      document.getElementById('modal').style.display = 'flex';
+    }
+    function closeModal(event) {
+      if (event.target.id === 'modal' || event.target.classList.contains('close-btn')) {
+        document.getElementById('modal').style.display = 'none';
+      }
+    }
+    function goHome() {
+      document.getElementById('gallery').style.display = 'none';
+      document.getElementById('modal').style.display = 'none';
+    }
+  </script>
 </body>
 </html>
